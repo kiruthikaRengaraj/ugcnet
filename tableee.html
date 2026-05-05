@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiruthika's UGC NET Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4db6ac;
+            --secondary: #81c784;
+            --accent: #9575cd;
+            --text-dark: #37474f;
+            --bg-gradient: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-heavy: rgba(255, 255, 255, 0.9);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Muted Sidebar */
+        nav {
+            width: 280px;
+            background: var(--glass-heavy);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.02);
+        }
+
+        .user-profile {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(77, 182, 172, 0.3);
+        }
+
+        .nav-brand {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .nav-link i { width: 20px; text-align: center; opacity: 0.7; }
+
+        .nav-link:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Main Content */
+        main { flex: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
+
+        .glass-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+        }
+
+        .welcome-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .welcome-text p { opacity: 0.7; margin-top: 5px; }
+
+        /* Progress Bar */
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; }
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: #e0e6ed;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 50px;
+        }
+
+        /* Search Box */
+        #searchBox {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid #d1d9e0;
+            color: var(--text-dark);
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        #searchBox:focus { border-color: var(--primary); }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; }
+        tr { border-bottom: 1px solid #edf2f7; }
+        tr:last-child { border-bottom: none; }
+        tr:hover { background: #f8fafb; }
+        td { padding: 18px 10px; }
+
+        .mcq-badge {
+            background: #e0f2f1;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        /* Timer */
+        .timer-display {
+            width: 160px; height: 160px;
+            border: 6px solid #e0e0e0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 2.2rem; font-weight: 800; margin: 0 auto 20px;
+            color: var(--text-dark);
+        }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
+        .neon-btn {
+            padding: 10px 22px; border-radius: 8px; border: none; font-weight: 600;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: #cfd8dc; color: var(--text-dark); }
+
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+
+        .layout-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="user-profile">
+        <div class="user-avatar">K</div>
+        <div class="nav-brand">Kiruthika</div>
+        <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 5px;">JRF Aspirant</p>
+    </div>
+    
+    <div class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+    <div class="nav-link"><i class="fas fa-book-open"></i> Syllabus Tracker</div>
+    <div class="nav-link" onclick="exportData()"><i class="fas fa-save"></i> Save Progress</div>
+    <div class="nav-link" onclick="resetAll()" style="margin-top: auto; color: #d32f2f;">
+        <i class="fas fa-trash-alt"></i> Reset Data
+    </div>
+</nav>
+
+<main>
+    <div class="welcome-hero">
+        <div class="welcome-text">
+            <h1>Welcome back, Kiruthika! 🌿</h1>
+            <p>Your focused study path to UGC NET success.</p>
+        </div>
+        <div class="glass-card" style="margin:0; text-align: center; padding: 15px 25px; border-color: var(--primary);">
+            <div style="font-size: 0.65rem; color: var(--primary); font-weight: 800; letter-spacing: 1px;">EXAM COUNTDOWN</div>
+            <div id="countdown" style="font-size: 1.4rem; font-weight: 800;">00:00:00</div>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div class="progress-label">
+            <span>Overall Mastery</span>
+            <span id="percentText">0%</span>
+        </div>
+        <div class="progress-container"><div id="progressBar"></div></div>
+    </div>
+
+    <input type="text" id="searchBox" onkeyup="filterTable()" placeholder="🔍 Search topics (e.g. DBMS, Teaching Aptitude)...">
+
+    <div class="layout-grid">
+        <div class="content-left">
+            <div class="glass-card">
+                <h3 style="margin-top: 0; color: var(--primary);"><i class="fas fa-list-check"></i> Daily Study Plan</h3>
+                <table>
+                    <tbody id="trackerBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-right">
+            <div class="glass-card" style="text-align: center;">
+                <h4 style="margin-top: 0; opacity: 0.8;">Deep Work Timer</h4>
+                <div class="timer-display" id="pomoTime">25:00</div>
+                <div class="btn-group">
+                    <button class="neon-btn btn-primary" onclick="togglePomo()">Start</button>
+                    <button class="neon-btn btn-secondary" onclick="resetPomo()">Reset</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h4 style="margin-top: 0; opacity: 0.8;"><i class="fas fa-chart-line"></i> Performance</h4>
+                <canvas id="scoreChart"></canvas>
+                <div style="margin-top: 20px; display: flex; gap: 8px;">
+                    <input type="number" id="newScore" style="flex:1; padding:10px; border-radius:8px; border:1px solid #d1d9e0;" placeholder="Score %">
+                    <button class="neon-btn btn-primary" onclick="addScore()" style="padding: 10px 15px;">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+const examDate = new Date("June 15, 2026 09:00:00").getTime();
+
+let syllabus = JSON.parse(localStorage.getItem('ugc_syllabus')) || [
+    { p1: "Teaching Aptitude: Evaluation Systems", p2: "OS: Virtual Memory & Paging", mcq: "https://www.sanfoundry.com/operating-system-mcqs-virtual-memory-1/" },
+    { p1: "Research Method: Experimental", p2: "DBMS: SQL Queries & Joins", mcq: "https://www.geeksforgeeks.org/sql-gq/" },
+    { p1: "Communication: Classroom Barriers", p2: "DSA: Sorting & Searching", mcq: "https://www.sanfoundry.com/data-structures-questions-answers-sorting-1/" },
+    { p1: "Higher Ed: Ancient Institutions", p2: "Computer Networks: TCP/IP", mcq: "https://www.sanfoundry.com/computer-networks-mcqs-tcp-ip-protocol-suite-1/" }
+];
+
+if(syllabus.length < 50) {
+    for(let i=syllabus.length; i<50; i++) {
+        syllabus.push({ 
+            p1: `Paper 1: Revision Unit ${i%10 + 1}`, 
+            p2: `Paper 2: Technical Unit ${i%10 + 1}`, 
+            mcq: "https://www.google.com/search?q=ugc+net+cs+quiz" 
+        });
+    }
+}
+
+let scoreData = JSON.parse(localStorage.getItem('ugc_scores')) || [45, 52, 60, 72];
+let chart;
+
+function init() {
+    renderTable();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    initChart();
+    updateProgress();
+}
+
+function renderTable() {
+    const body = document.getElementById('trackerBody');
+    body.innerHTML = syllabus.map((day, i) => {
+        const done = localStorage.getItem('day_'+i) === 'true';
+        return `
+        <tr id="row-${i}" style="opacity: ${done ? '0.5' : '1'}">
+            <td width="30" style="color: var(--primary); font-weight: 800;">${i+1}</td>
+            <td>
+                <div style="font-weight: 700; font-size: 1rem;">${day.p1}</div>
+                <div style="color: #607d8b; font-size: 0.8rem; margin: 2px 0;">${day.p2}</div>
+                <a href="${day.mcq}" target="_blank" class="mcq-badge">Practice MCQ</a>
+            </td>
+            <td width="40" align="right">
+                <input type="checkbox" ${done ? 'checked' : ''} onclick="toggleDay(${i})">
+            </td>
+        </tr>
+    `}).join('');
+}
+
+function toggleDay(i) {
+    const status = localStorage.getItem('day_'+i) === 'true';
+    localStorage.setItem('day_'+i, !status);
+    updateProgress();
+    renderTable();
+}
+
+function updateProgress() {
+    let count = 0;
+    for(let i=0; i<syllabus.length; i++) {
+        if(localStorage.getItem('day_'+i) === 'true') count++;
+    }
+    const percent = Math.round((count / syllabus.length) * 100);
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('percentText').innerText = percent + '%';
+}
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const gap = examDate - now;
+    const d = Math.floor(gap / (1000 * 60 * 60 * 24));
+    const h = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('countdown').innerText = `${d}d ${h}h ${m}m`;
+}
+
+// POMODORO
+let pomoActive = false;
+let pomoTime = 1500;
+let pomoInterval;
+
+function togglePomo() {
+    if(!pomoActive) {
+        pomoInterval = setInterval(() => {
+            pomoTime--;
+            updatePomoDisplay();
+            if(pomoTime <= 0) { 
+                clearInterval(pomoInterval); 
+                alert("Great session, Kiruthika! Take a break."); 
+                resetPomo(); 
+            }
+        }, 1000);
+    } else { clearInterval(pomoInterval); }
+    pomoActive = !pomoActive;
+}
+
+function updatePomoDisplay() {
+    const m = Math.floor(pomoTime/60);
+    const s = pomoTime % 60;
+    document.getElementById('pomoTime').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function resetPomo() {
+    clearInterval(pomoInterval);
+    pomoTime = 1500;
+    pomoActive = false;
+    updatePomoDisplay();
+}
+
+// CHARTING
+function initChart() {
+    const ctx = document.getElementById('scoreChart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: scoreData.map((_, i) => `T${i+1}`),
+            datasets: [{
+                label: 'Score %',
+                data: scoreData,
+                borderColor: '#4db6ac',
+                backgroundColor: 'rgba(77, 182, 172, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 2,
+                pointRadius: 3
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { 
+                y: { beginAtZero: true, max: 100, ticks: { color: '#37474f' } },
+                x: { ticks: { color: '#37474f' } }
+            }
+        }
+    });
+}
+
+function addScore() {
+    const s = parseInt(document.getElementById('newScore').value);
+    if(s >= 0 && s <= 100) {
+        scoreData.push(s);
+        localStorage.setItem('ugc_scores', JSON.stringify(scoreData));
+        chart.data.labels.push(`T${scoreData.length}`);
+        chart.update();
+        document.getElementById('newScore').value = '';
+    }
+}
+
+function filterTable() {
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    syllabus.forEach((day, i) => {
+        const row = document.getElementById(`row-${i}`);
+        row.style.display = (day.p1.toLowerCase().includes(q) || day.p2.toLowerCase().includes(q)) ? '' : 'none';
+    });
+}
+
+function exportData() {
+    const blob = new Blob([JSON.stringify(localStorage)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'kiruthika_study_data.json'; a.click();
+}
+
+function resetAll() {
+    if(confirm("Kiruthika, are you sure you want to clear your study progress?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
